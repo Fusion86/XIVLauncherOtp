@@ -31,14 +31,27 @@ namespace XIVLauncherOtp
                 return 2;
             }
 
-            string localAppdata = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string xivlauncherPath = Path.Combine(localAppdata, "XIVLauncher", "XIVLauncher.exe");
-
-            Console.WriteLine("Starting XIVLauncher...");
-            var p = Process.Start(new ProcessStartInfo
+            // Check whether XIVLauncher is already running, and only start it when it isn't.
+            Process p;
+            var launcherProcs = Process.GetProcessesByName("XIVLauncher");
+            if (launcherProcs.Length > 0)
             {
-                FileName = xivlauncherPath,
-            });
+                // Use existing XIVLauncher instance.
+                Console.WriteLine("Using existing XIVLauncher process.");
+                p = launcherProcs[0];
+            }
+            else
+            {
+                // Start XIVLauncher
+                string localAppdata = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string xivlauncherPath = Path.Combine(localAppdata, "XIVLauncher", "XIVLauncher.exe");
+
+                Console.WriteLine("Starting XIVLauncher...");
+                p = Process.Start(new ProcessStartInfo
+                {
+                    FileName = xivlauncherPath,
+                });
+            }
 
             var http = new HttpClient();
             var totp = new Totp(secretKey);
