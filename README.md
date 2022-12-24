@@ -22,3 +22,9 @@ I don't know. I extracted mine from my TOTP app. This application expects the se
 ## Why the heck are you storing the secret unencrypted??
 
 If you cared about security then you wouldn't use this. The whole idea of TOTP is that you need a second device to login.
+
+## How to build a release
+
+```cmd
+dotnet publish -r win-x64 -c Release
+```
